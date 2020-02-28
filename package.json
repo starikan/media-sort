@@ -1,0 +1,15 @@
+{
+  "name": "photo-sorter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"No tests\""
+  },
+  "author": "Sergey Starodubov <4analit@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "polyfill-object.fromentries": "^1.0.1",
+    "walk-sync": "^2.0.2"
+  }
+}
