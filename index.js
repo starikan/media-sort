@@ -7,8 +7,8 @@ require('polyfill-object.fromentries');
 const DEFAULTS = {
   ROOT: process.cwd(),
   EXPORT_FOLDER: 'export',
-  ALLOW_IMAGES: ['.jpg', '.jpeg'],
-  ALLOW_VIDEOS: ['.mp4', '.MTS', '.3gp'],
+  ALLOW_IMAGES: '.jpg, .jpeg, .JPG, .JPEG',
+  ALLOW_VIDEOS: '.mp4, .MTS, .3gp',
 };
 
 const parseCLI = () => {
@@ -19,8 +19,6 @@ const parseCLI = () => {
       .map(v => v.split('='))
       .filter(v => v.length > 1),
   );
-  argsRaw.ALLOW_IMAGES ? (argsRaw.ALLOW_IMAGES = argsRaw.ALLOW_IMAGES.split(',')) : null;
-  argsRaw.ALLOW_VIDEOS ? (argsRaw.ALLOW_VIDEOS = argsRaw.ALLOW_VIDEOS.split(',')) : null;
   return argsRaw;
 };
 
@@ -30,18 +28,14 @@ const generateConsts = () => {
   return {
     ROOT,
     EXPORT_PATH: path.join(ROOT, EXPORT_FOLDER),
-    ALLOW_IMAGES: ALLOW_IMAGES.map(v => `**/*${v}`),
-    ALLOW_VIDEOS: ALLOW_VIDEOS.map(v => `**/*${v}`),
+    ALLOW_IMAGES: ALLOW_IMAGES.split(/\s*,\s*/).map(v => `**/*${v}`),
+    ALLOW_VIDEOS: ALLOW_VIDEOS.split(/\s*,\s*/).map(v => `**/*${v}`),
   };
 };
 
 const createExportFolder = () => {
   if (!fs.existsSync(EXPORT_PATH)) {
     fs.mkdirSync(EXPORT_PATH);
-  }
-
-  if (walkSync(EXPORT_PATH, { globs: ['**/*.*'] }).length) {
-    throw new Error('Export folder not empty');
   }
 };
 
@@ -53,16 +47,6 @@ const getFiles = (globs, root = ROOT) => {
 const formaDate = (date, options = { year: 'numeric', month: '2-digit', day: '2-digit' }) => {
   return new Intl.DateTimeFormat('ru-RU', options).format(date);
 };
-
-// const formatTime = (date) => {
-//   const options = {
-//     hour: '2-digit',
-//     minute: '2-digit',
-//     second: '2-digit',
-//     hour12: false,
-//   };
-//   return new Intl.DateTimeFormat('ru-RU', options).format(date)
-// }
 
 const getDateFromFile = fileName => {
   const stat = fs.statSync(fileName);
@@ -109,7 +93,9 @@ const generateFolders = files => {
 
 const moveFiles = files => {
   files.map(f => {
-    fs.copyFileSync(f.filePath, f.fileDestination);
+    if (!fs.existsSync(f.fileDestination)) {
+      fs.renameSync(f.filePath, f.fileDestination);
+    }
   });
 };
 
@@ -124,5 +110,3 @@ generateFolders(allVideos);
 
 moveFiles(allImages);
 moveFiles(allVideos);
-
-// debugger;
