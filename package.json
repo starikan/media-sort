@@ -1,6 +1,6 @@
 {
-  "name": "photo-sorter",
-  "version": "1.0.0",
+  "name": "photo-sort",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,6 +8,19 @@
   },
   "author": "Sergey Starodubov <4analit@gmail.com>",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/starikan/photo-sort.git"
+  },
+  "bugs": {
+    "url": "https://github.com/starikan/photo-sort/issues"
+  },
+  "keywords": [
+    "photo",
+    "video",
+    "files sorting",
+    "automatization"
+  ],
   "dependencies": {
     "polyfill-object.fromentries": "^1.0.1",
     "walk-sync": "^2.0.2"
