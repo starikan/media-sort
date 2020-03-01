@@ -9,6 +9,7 @@ const DEFAULTS = {
   EXPORT_FOLDER: 'export',
   ALLOW_IMAGES: '.jpg, .jpeg, .JPG, .JPEG',
   ALLOW_VIDEOS: '.mp4, .MTS, .3gp',
+  DELETE_SOURCE: true,
 };
 
 const parseCLI = () => {
@@ -23,13 +24,14 @@ const parseCLI = () => {
 };
 
 const generateConsts = () => {
-  const { ROOT, EXPORT_FOLDER, ALLOW_IMAGES, ALLOW_VIDEOS } = { ...DEFAULTS, ...parseCLI() };
+  const { ROOT, EXPORT_FOLDER, ALLOW_IMAGES, ALLOW_VIDEOS, DELETE_SOURCE } = { ...DEFAULTS, ...parseCLI() };
 
   return {
     ROOT,
     EXPORT_PATH: path.join(ROOT, EXPORT_FOLDER),
     ALLOW_IMAGES: ALLOW_IMAGES.split(/\s*,\s*/).map(v => `**/*${v}`),
     ALLOW_VIDEOS: ALLOW_VIDEOS.split(/\s*,\s*/).map(v => `**/*${v}`),
+    DELETE_SOURCE: !(DELETE_SOURCE === 'false'),
   };
 };
 
@@ -99,7 +101,15 @@ const moveFiles = files => {
   });
 };
 
-const { ROOT, EXPORT_PATH, ALLOW_IMAGES, ALLOW_VIDEOS } = generateConsts();
+const copyFiles = files => {
+  files.map(f => {
+    if (!fs.existsSync(f.fileDestination)) {
+      fs.copyFileSync(f.filePath, f.fileDestination);
+    }
+  });
+};
+
+const { ROOT, EXPORT_PATH, ALLOW_IMAGES, ALLOW_VIDEOS, DELETE_SOURCE } = generateConsts();
 
 createExportFolder();
 const allImages = getFiles(ALLOW_IMAGES).map(extractParams);
@@ -108,5 +118,5 @@ const allVideos = getFiles(ALLOW_VIDEOS).map(extractParams);
 generateFolders(allImages);
 generateFolders(allVideos);
 
-moveFiles(allImages);
-moveFiles(allVideos);
+DELETE_SOURCE ? moveFiles(allImages) : copyFiles(allImages);
+DELETE_SOURCE ? moveFiles(allVideos) : copyFiles(allVideos);
