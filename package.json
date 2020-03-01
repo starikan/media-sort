@@ -1,5 +1,5 @@
 {
-  "name": "photo-sort",
+  "name": "media-sort",
   "version": "0.1.0",
   "description": "",
   "main": "index.js",
@@ -10,10 +10,10 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/starikan/photo-sort.git"
+    "url": "git+https://github.com/starikan/media-sort.git"
   },
   "bugs": {
-    "url": "https://github.com/starikan/photo-sort/issues"
+    "url": "https://github.com/starikan/media-sort/issues"
   },
   "keywords": [
     "photo",
