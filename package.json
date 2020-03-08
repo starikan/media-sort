@@ -22,6 +22,8 @@
     "automatization"
   ],
   "dependencies": {
+    "dayjs": "^1.8.21",
+    "exif": "^0.6.0",
     "polyfill-object.fromentries": "^1.0.1",
     "walk-sync": "^2.0.2"
   }

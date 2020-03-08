@@ -4,6 +4,8 @@ const path = require('path');
 const walkSync = require('walk-sync');
 require('polyfill-object.fromentries');
 
+const { Exif } = require('./src/Exif.js');
+
 const DEFAULTS = {
   ROOT: process.cwd(),
   EXPORT_FOLDER: 'export',
@@ -28,9 +30,12 @@ const generateConsts = () => {
 
   return {
     ROOT,
+    EXPORT_FOLDER,
+    ALLOW_IMAGES: ALLOW_IMAGES.split(/\s*,\s*/),
+    ALLOW_VIDEOS: ALLOW_VIDEOS.split(/\s*,\s*/),
     EXPORT_PATH: path.join(ROOT, EXPORT_FOLDER),
-    ALLOW_IMAGES: ALLOW_IMAGES.split(/\s*,\s*/).map(v => `**/*${v}`),
-    ALLOW_VIDEOS: ALLOW_VIDEOS.split(/\s*,\s*/).map(v => `**/*${v}`),
+    ALLOW_IMAGES_FILTER: ALLOW_IMAGES.split(/\s*,\s*/).map(v => `**/*${v}`),
+    ALLOW_VIDEOS_FILTER: ALLOW_VIDEOS.split(/\s*,\s*/).map(v => `**/*${v}`),
     DELETE_SOURCE: !(DELETE_SOURCE === 'false'),
   };
 };
@@ -42,7 +47,7 @@ const createExportFolder = () => {
 };
 
 const getFiles = (globs, root = ROOT) => {
-  const allFiles = walkSync(root, { ignore: [EXPORT_PATH], includeBasePath: true, globs: globs });
+  const allFiles = walkSync(root, { ignore: [EXPORT_FOLDER], includeBasePath: true, globs: globs });
   return allFiles;
 };
 
@@ -61,7 +66,15 @@ const getDateFromFile = fileName => {
   return dates;
 };
 
-const extractParams = v => {
+const extractParams = async v => {
+  let exif = {};
+  try {
+    const exifInstance = new Exif(v);
+    await exifInstance.getExif();
+    exif = exifInstance.data;
+  } finally {
+  }
+
   let data = {};
   data.filePath = v;
   data.fileName = path.parse(v).name;
@@ -70,6 +83,7 @@ const extractParams = v => {
   data.fileType = ALLOW_IMAGES.includes(data.fileExt) ? 'image' : 'video';
   data = { ...data, ...getDateFromFile(v) };
   data.fileDestination = path.join(EXPORT_PATH, data.fileDateMonth, data.fileDate, data.fileFullName);
+  data = data.fileType === 'image' ? { ...data, ...exif } : data;
   return data;
 };
 
@@ -109,14 +123,29 @@ const copyFiles = files => {
   });
 };
 
-const { ROOT, EXPORT_PATH, ALLOW_IMAGES, ALLOW_VIDEOS, DELETE_SOURCE } = generateConsts();
+const run = async () => {
+  createExportFolder();
+  const allImages = await Promise.all(getFiles(ALLOW_IMAGES_FILTER).map(async v => await extractParams(v)));
+  const allVideos = await Promise.all(getFiles(ALLOW_VIDEOS_FILTER).map(async v => await extractParams(v)));
 
-createExportFolder();
-const allImages = getFiles(ALLOW_IMAGES).map(extractParams);
-const allVideos = getFiles(ALLOW_VIDEOS).map(extractParams);
+  generateFolders(allImages);
+  generateFolders(allVideos);
 
-generateFolders(allImages);
-generateFolders(allVideos);
+  DELETE_SOURCE ? moveFiles(allImages) : copyFiles(allImages);
+  DELETE_SOURCE ? moveFiles(allVideos) : copyFiles(allVideos);
 
-DELETE_SOURCE ? moveFiles(allImages) : copyFiles(allImages);
-DELETE_SOURCE ? moveFiles(allVideos) : copyFiles(allVideos);
+  console.log('DONE!');
+};
+
+const {
+  ROOT,
+  EXPORT_PATH,
+  ALLOW_IMAGES,
+  ALLOW_VIDEOS,
+  DELETE_SOURCE,
+  EXPORT_FOLDER,
+  ALLOW_IMAGES_FILTER,
+  ALLOW_VIDEOS_FILTER,
+} = generateConsts();
+
+run();
