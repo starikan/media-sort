@@ -123,16 +123,39 @@ const copyFiles = files => {
   });
 };
 
+const filterBad = files => {
+  const allowFiles = files.filter(v => v.exifDate === v.fileDate || !v.exifDate);
+  const badFiles = files.filter(v => v.exifDate && v.exifDate !== v.fileDate);
+  return [allowFiles, badFiles];
+};
+
+const logBads = files => {
+  const formedFiles = files.map(v => ({
+    fileName: v.fileName,
+    exifDate: v.exifDate,
+    fileDate: v.fileDate,
+    fileType: v.fileType,
+  }));
+  formedFiles.length ? console.log('BAD FILES') : null;
+  formedFiles.length ? console.table(formedFiles) : null;
+};
+
 const run = async () => {
   createExportFolder();
   const allImages = await Promise.all(getFiles(ALLOW_IMAGES_FILTER).map(async v => await extractParams(v)));
   const allVideos = await Promise.all(getFiles(ALLOW_VIDEOS_FILTER).map(async v => await extractParams(v)));
 
-  generateFolders(allImages);
-  generateFolders(allVideos);
+  const [allowImages, badImages] = filterBad(allImages);
+  const [allowVideos, badVideos] = filterBad(allVideos);
 
-  DELETE_SOURCE ? moveFiles(allImages) : copyFiles(allImages);
-  DELETE_SOURCE ? moveFiles(allVideos) : copyFiles(allVideos);
+  generateFolders(allowImages);
+  generateFolders(allowVideos);
+
+  DELETE_SOURCE ? moveFiles(allowImages) : copyFiles(allowImages);
+  DELETE_SOURCE ? moveFiles(allowVideos) : copyFiles(allowVideos);
+
+  logBads(badImages);
+  logBads(badVideos);
 
   console.log('DONE!');
 };
