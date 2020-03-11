@@ -15,7 +15,6 @@ class Exif {
     const exifPromice = new Promise((resolve, reject) => {
       new ExifImage({ image: this.fileName }, function(error, exifData) {
         if (error) {
-          console.log('Error: ' + error.message);
           reject(error);
         } else {
           resolve(exifData);
@@ -30,7 +29,7 @@ class Exif {
     const dateParsed = dayjs(DateTimeOriginal, 'YYYY:MM:DD HH:mm:ss');
     this.exifParsed = {
       exifDateTimeRaw: dateParsed,
-      exifDate: dateParsed.format('YYYY-MM-DD'),
+      exifDate: dateParsed.format('YY-MM-DD'),
     };
   }
 

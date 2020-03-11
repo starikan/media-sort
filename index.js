@@ -59,22 +59,17 @@ const getDateFromFile = fileName => {
   const stat = fs.statSync(fileName);
 
   const dates = {};
-  dates.fileDate = formaDate(stat.mtime, { year: 'numeric', month: '2-digit', day: '2-digit' });
-  dates.fileDateMonth = formaDate(stat.mtime, { year: 'numeric', month: '2-digit' });
+  dates.fileDate = formaDate(stat.mtime, { year: '2-digit', month: '2-digit', day: '2-digit' });
+  dates.fileDateMonth = formaDate(stat.mtime, { year: '2-digit', month: '2-digit' });
   dates.fileDateYear = formaDate(stat.mtime, { year: 'numeric' });
 
   return dates;
 };
 
 const extractParams = async v => {
-  let exif = {};
-  try {
-    const exifInstance = new Exif(v);
-    await exifInstance.getExif();
-    exif = exifInstance.data;
-  } finally {
-  }
+  console.log(v);
 
+  let exif = {};
   let data = {};
   data.filePath = v;
   data.fileName = path.parse(v).name;
@@ -83,6 +78,17 @@ const extractParams = async v => {
   data.fileType = ALLOW_IMAGES.includes(data.fileExt) ? 'image' : 'video';
   data = { ...data, ...getDateFromFile(v) };
   data.fileDestination = path.join(EXPORT_PATH, data.fileDateMonth, data.fileDate, data.fileFullName);
+
+  try {
+    if (data.fileType === 'image') {
+      const exifInstance = new Exif(v);
+      await exifInstance.getExif();
+      exif = exifInstance.data;
+    }
+  } catch (error) {
+    console.log(`Exif: ${error}`);
+  }
+
   data = data.fileType === 'image' ? { ...data, ...exif } : data;
   return data;
 };
@@ -142,8 +148,16 @@ const logBads = files => {
 
 const run = async () => {
   createExportFolder();
-  const allImages = await Promise.all(getFiles(ALLOW_IMAGES_FILTER).map(async v => await extractParams(v)));
-  const allVideos = await Promise.all(getFiles(ALLOW_VIDEOS_FILTER).map(async v => await extractParams(v)));
+
+  const allImages = getFiles(ALLOW_IMAGES_FILTER);
+  for (let i = 0; i < allImages.length; i++) {
+    allImages[i] = await extractParams(allImages[i]);
+  }
+
+  const allVideos = getFiles(ALLOW_VIDEOS_FILTER);
+  for (let i = 0; i < allVideos.length; i++) {
+    allVideos[i] = await extractParams(allVideos[i]);
+  }
 
   const [allowImages, badImages] = filterBad(allImages);
   const [allowVideos, badVideos] = filterBad(allVideos);
