@@ -1,0 +1,48 @@
+{
+  // Используйте IntelliSense, чтобы узнать о возможных атрибутах.
+  // Наведите указатель мыши, чтобы просмотреть описания существующих атрибутов.
+  // Для получения дополнительной информации посетите: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Запустить программу",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}\\index.js",
+      "args": [
+        "ROOT=E:\\Photos_test",
+        "DELETE_SOURCE=false"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Prod",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}\\index.js",
+      "args": [
+        "ROOT=O:\\Not_synced",
+        "DELETE_SOURCE=true"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Folders",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}\\src\\apps\\folders\\index.js",
+      "console": "integratedTerminal",
+      "args": [
+        "--ROOT=E:\\Photos_test",
+        "--DELETE_SOURCE=false"
+      ]
+    }
+  ]
+}
