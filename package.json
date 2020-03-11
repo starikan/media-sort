@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "",
   "main": "index.js",
+  "bin": {
+    "folders": "bin/folders"
+  },
   "scripts": {
     "test": "echo \"No tests\""
   },
@@ -22,9 +25,11 @@
     "automatization"
   ],
   "dependencies": {
-    "dayjs": "^1.8.21",
-    "exif": "^0.6.0",
-    "polyfill-object.fromentries": "^1.0.1",
-    "walk-sync": "^2.0.2"
+    "arg": "4.1.3",
+    "dayjs": "1.8.22",
+    "esm": "3.2.25",
+    "exif": "0.6.0",
+    "prompts": "^2.3.1",
+    "walk-sync": "2.0.2"
   }
 }

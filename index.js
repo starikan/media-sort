@@ -36,7 +36,7 @@ const generateConsts = () => {
     EXPORT_PATH: path.join(ROOT, EXPORT_FOLDER),
     ALLOW_IMAGES_FILTER: ALLOW_IMAGES.split(/\s*,\s*/).map(v => `**/*${v}`),
     ALLOW_VIDEOS_FILTER: ALLOW_VIDEOS.split(/\s*,\s*/).map(v => `**/*${v}`),
-    DELETE_SOURCE: !(DELETE_SOURCE === 'false'),
+    DELETE_SOURCE: DELETE_SOURCE !== 'false',
   };
 };
 
