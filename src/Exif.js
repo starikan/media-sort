@@ -13,7 +13,7 @@ class Exif {
 
   async getExif() {
     const exifPromice = new Promise((resolve, reject) => {
-      new ExifImage({ image: this.fileName }, function(error, exifData) {
+      new ExifImage({ image: this.fileName }, function (error, exifData) {
         if (error) {
           reject(error);
         } else {

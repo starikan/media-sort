@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": false,
+    "target": "ESNext",
+    "types": ["node", "webpack-env", "jest"],
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "removeComments": true
+  },
+  "lib": ["es2020", "es2020.array"],
+  "include": ["src/**/*", "src.tests/**/*", "index.ts"],
+  "exclude": ["node_modules"]
+}

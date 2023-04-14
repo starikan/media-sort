@@ -11,11 +11,11 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}\\index.js",
-      "args": [
-        "ROOT=E:\\Photos_test",
-        "DELETE_SOURCE=false"
-      ]
+      "program": "${workspaceFolder}\\dist\\index.js",
+      // "args": [
+      //   "ROOT=E:\\Photos_test",
+      //   "DELETE_SOURCE=false"
+      // ]
     },
     {
       "type": "node",

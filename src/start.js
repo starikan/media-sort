@@ -3,7 +3,7 @@ import * as path from 'path';
 
 import walkSync from 'walk-sync'
 
-import { Exif } from './src/Exif.js';
+import { Exif } from './Exif.js';
 
 const DEFAULTS = {
   ROOT: process.cwd(),
