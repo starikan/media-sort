@@ -8,10 +8,8 @@
       "type": "node",
       "request": "launch",
       "name": "Запустить программу",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "program": "${workspaceFolder}\\dist\\index.js",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}\\dist\\index.js"
       // "args": [
       //   "ROOT=E:\\Photos_test",
       //   "DELETE_SOURCE=false"
@@ -21,28 +19,25 @@
       "type": "node",
       "request": "launch",
       "name": "Prod",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
+      "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}\\index.js",
-      "args": [
-        "ROOT=O:\\Not_synced",
-        "DELETE_SOURCE=true"
-      ]
+      "args": ["ROOT=O:\\Not_synced", "DELETE_SOURCE=true"]
     },
     {
       "type": "node",
       "request": "launch",
       "name": "Folders",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
+      "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}\\src\\apps\\folders\\index.js",
       "console": "integratedTerminal",
-      "args": [
-        "--ROOT=E:\\Photos_test",
-        "--DELETE_SOURCE=false"
-      ]
+      "args": ["--ROOT=E:\\Photos_test", "--DELETE_SOURCE=false"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch File",
+      "args": ["${file}"],
+      "runtimeArgs": ["-r", "ts-node/register"],
     }
   ]
 }
