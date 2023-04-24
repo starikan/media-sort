@@ -1,17 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import dayjs from 'dayjs';
-import { walkSync } from './Helpers';
-
-export const getFilesFromRecorder = (dir: string = process.cwd()): string[] => {
-  const dirFull = path.resolve(dir);
-  const files = walkSync(dirFull, { extensions: ['mp4'] });
-  return files;
-};
-
-export const sortFilesFromRecorder = (dir: string = process.cwd()): void => {
-  getFilesFromRecorder(dir);
-};
+import { getFilesFromRecorder } from './service';
 
 const parseDate = (dateString: string): Date => {
   const year = parseInt(dateString.slice(0, 4), 10);
@@ -88,14 +78,15 @@ const run = async (sourceFolder: string, exportFolder: string): Promise<void> =>
     .forEach((v) => createNestedFolder(v));
 
   files.forEach((v, i) => {
-    console.log(i, v.source, v.target);
     if (!fs.existsSync(v.target)) {
       fs.copyFileSync(v.source, v.target);
+      console.log(i, v.source, v.target);
     } else {
       if (!fs.existsSync(path.join(exportFolder, 'conflict'))) {
         fs.mkdirSync(path.join(exportFolder, 'conflict'));
       }
       fs.copyFileSync(v.source, path.join(exportFolder, 'conflict', v.nameNew));
+      console.log(i, v.source, path.join(exportFolder, 'conflict', v.nameNew));
     }
   });
 
