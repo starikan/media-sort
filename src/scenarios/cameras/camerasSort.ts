@@ -93,5 +93,6 @@ const run = async (sourceFolder: string, exportFolder: string): Promise<void> =>
   console.log('Done.');
 };
 
-run('F:\\', 'D:\\Фотки на синхронизацию\\Камеры\\EXPORT');
+// run('F:\\', 'D:\\Фотки на синхронизацию\\Камеры\\EXPORT');
+run('D:\\Фотки на синхронизацию\\Cam', 'X:\\Камеры\\EXPORT');
 // run('D:\\Фотки на синхронизацию\\Камеры\\НГ', 'D:\\Фотки на синхронизацию\\Камеры\\EXPORT_NG');

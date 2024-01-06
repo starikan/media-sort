@@ -1,19 +1,24 @@
-const ExifImage = require('exif').ExifImage;
-const dayjs = require('dayjs');
+import dayjs from 'dayjs';
+import { ExifImage } from 'exif';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 
-const customParseFormat = require('dayjs/plugin/customParseFormat');
 dayjs.extend(customParseFormat);
 
-class Exif {
+export class Exif {
+  fileName: string;
+  exif: any;
+  exifParsed: any;
+
   constructor(fileName) {
     this.fileName = fileName;
     this.exif = {};
     this.exifParsed = {};
   }
 
-  async getExif() {
+  async getExif(): Promise<void> {
     const exifPromice = new Promise((resolve, reject) => {
-      new ExifImage({ image: this.fileName }, function (error, exifData) {
+      // eslint-disable-next-line no-new
+      new ExifImage({ image: this.fileName }, (error, exifData) => {
         if (error) {
           reject(error);
         } else {
@@ -22,9 +27,10 @@ class Exif {
       });
     });
     this.exif = await exifPromice;
+    this.parseExif();
   }
 
-  parseExif() {
+  parseExif(): void {
     const { DateTimeOriginal } = this.exif.exif;
     const dateParsed = dayjs(DateTimeOriginal, 'YYYY:MM:DD HH:mm:ss');
     this.exifParsed = {
@@ -32,11 +38,4 @@ class Exif {
       exifDate: dateParsed.format('YY-MM-DD'),
     };
   }
-
-  get data() {
-    this.parseExif();
-    return this.exifParsed;
-  }
 }
-
-module.exports = { Exif };
