@@ -22,7 +22,7 @@ const createNestedFolder = (dirPath: string): void => {
   let currentPath = '';
 
   folders.forEach((folder) => {
-    currentPath = path.join(currentPath, folder);
+    currentPath = currentPath ? path.join(currentPath, folder) : folder;
     if (!fs.existsSync(currentPath)) {
       fs.mkdirSync(currentPath);
     }
@@ -93,6 +93,8 @@ const run = async (sourceFolder: string, exportFolder: string): Promise<void> =>
   console.log('Done.');
 };
 
+run('D:\\Камеры', 'D:\\Фотки на синхронизацию\\Камеры\\EXPORT_NG');
+// run('F:\\', 'D:\\Фотки на синхронизацию\\Камеры\\EXPORT_NG');
 // run('F:\\', 'D:\\Фотки на синхронизацию\\Камеры\\EXPORT');
-run('D:\\Фотки на синхронизацию\\Cam', 'X:\\Камеры\\EXPORT');
+// run('D:\\Фотки на синхронизацию\\Cam', 'X:\\Камеры\\EXPORT');
 // run('D:\\Фотки на синхронизацию\\Камеры\\НГ', 'D:\\Фотки на синхронизацию\\Камеры\\EXPORT_NG');
