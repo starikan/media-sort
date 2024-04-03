@@ -6,7 +6,11 @@ export const walkSync = (
   options: { ignoreFolders?: string[]; ignoreFiles?: string[]; extensions?: string[]; onlyFiles?: string[] } = {},
 ): string[] => {
   const baseDir = path.basename(dir);
-  if (!fs.existsSync(dir) || (options?.ignoreFolders ?? []).includes(baseDir)) {
+  if (
+    !fs.existsSync(dir) ||
+    (options?.ignoreFolders ?? []).includes(baseDir) ||
+    (options?.ignoreFolders ?? []).includes(dir)
+  ) {
     return [];
   }
   if (!fs.statSync(dir).isDirectory()) {
