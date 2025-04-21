@@ -22,4 +22,5 @@ const run = async (sourceFolder: string): Promise<void> => {
 };
 
 // run('I:\\P\\Камеры\\Яр\\2023');
-run('D:\\Фотки на синхронизацию\\Камеры\\EXPORT');
+// run('D:\\Фотки на синхронизацию\\Камеры\\EXPORT');
+run('E:\\Камеры');
